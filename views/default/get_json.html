@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
+
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+ <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
+
+
+
+<!-- mapbox dependencies -->
+<!-- <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' /> -->
+
+
+<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+
+
+<!-- draw control -->
+
+<!-- support for esri layers -->
+<script src="http://cdn.jsdelivr.net/leaflet.esri/1.0.0/esri-leaflet.js"></script>
+
+<!-- map style -->
+ <style type="text/css">
+ #map { height: 580px; }
+ </style>
+
+</head>
+<body>
+<div id="map"></div>
+
+ <p> helloworld</p>
+	
+<button type="button" id="btn-save" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+  Convert drawing to GeoJSON
+</button>
+
+<button type="button" id="btn-clear" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+  Clear map
+</button>
+
+<p>Connection: python -m http.server --bind 127.0.0.1</p>
+
+<script>
+    $(document).ready(function(){
+        // global land cover 30 NGCC
+        // mapbox tiles basemap - not used here
+		var b_toner = new L.StamenTileLayer("toner");
+		var b_watercolor = new L.StamenTileLayer("watercolor");
+
+		var mapl = new L.Map("map", {
+		    center: new L.LatLng(30, 120),
+		    // drawControl: true,
+		    zoom: 6,
+		    // layers: [b_toner, b_watercolor]
+		    layers: [b_toner]
+		});
+
+		mapl.addLayer(b_toner);
+
+		// add a local geojson layer: access control allow-origin 
+		$.get('/api/default/geoapi/61404', function(data){
+			var testlayer = new L.geoJson(data);
+			console.log(data);
+			mapl.addLayer(testlayer);
+		})
+
+		// base maps
+		var baseMaps = {
+		    "Stamen toner": b_toner,
+		    "Stamen watercolor": b_watercolor
+		};
+
+
+		})
+</script>
+
+
+</body>
+</html>
