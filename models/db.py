@@ -5,6 +5,10 @@
 ## File is released under public domain and you can use without limitations
 #########################################################################
 
+## reload modules when changes are made
+from gluon.custom_import import track_changes
+track_changes(True)
+
 ## if SSL/HTTPS is properly configured and you want all HTTP requests to
 ## be redirected to HTTPS, uncomment the line below:
 # request.requires_https()
@@ -86,4 +90,11 @@ db.define_table('wwfgeom',
 
 db.define_table('tempgeom',
     Field('geom', 'geometry()'))
+
+db.define_table('realmbiome',
+    Field('tid', 'integer'),
+    Field('bid', 'text'),
+    Field('seg_area', 'double'),
+    Field('theme_area', 'double'),
+    Field('base_area', 'double'))
 

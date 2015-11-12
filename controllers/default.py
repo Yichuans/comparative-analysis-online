@@ -79,16 +79,6 @@ def main():
 def local():
     return locals()
 
-def post():
-    return request.post_vars
-
-def add():
-    result = 0
-    for each in request.vars:
-        result += float(request.vars[each])
-
-    return result
-
 def count():
     session.counter = (session.counter or 0) + 1
     return dict(counter=session.counter, now=request.now)
@@ -100,7 +90,6 @@ def api():
     def POST(*arg, **var):
         # return response.json({'inputvar':v1})
         return dict(**var)
-
 
     return locals()
 
@@ -150,8 +139,6 @@ def geoapi():
             # run queries
             db.executesql(sql)
 
-        
-
         # return feature_list[0]
         return sql
 
@@ -165,24 +152,18 @@ def post_json():
     return dict()
 
 
+# for production
+def welcome():
+    # this is the landing page
+    return dict()
 
-# def get_geojson():
-#     from gluon.serializers import loads_json
+def comparative_analysis():
+    # this is the page showing the result of the comparative analysis
+    return dict()
 
-#     recid = request.args[0]
-#     response.view = 'generic.json'
-
-#     # only expect one row as result
-
-#     ## through DAL
-#     row = db(db.wwfgeom.recid == recid).select(db.wwfgeom.geom.st_asgeojson().with_alias('geom'))[0]
-#     result = row['geom']
-
-#     # ## direct sql, inject warning
-#     # result =  db.executesql('SELECT st_asgeojson(geom) as geom FROM wwfgeom WHERE recid = %s LIMIT 1;'%(recid,), as_dict=True)[0]
-#     # result = loads_json(result['geom'])
-
-#     return result
+def submit_boundary():
+    # this is the page to submit a drawn polygon
+    return dict()
 
 
 

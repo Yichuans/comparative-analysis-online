@@ -119,3 +119,33 @@ CREATE TABLE tempgeom(
     id SERIAL PRIMARY KEY
 );
 success!
+timestamp: 2015-11-12T12:31:56.567575
+CREATE TABLE realmbiome(
+    id SERIAL PRIMARY KEY,
+    tid INTEGER,
+    bid INTEGER,
+    seg_area FLOAT8,
+    theme_area FLOAT8,
+    base_area FLOAT8
+);
+success!
+timestamp: 2015-11-12T12:35:35.916181
+ALTER TABLE realmbiome ADD bid__tmp TEXT;
+UPDATE realmbiome SET bid__tmp=bid;
+ALTER TABLE realmbiome DROP COLUMN bid;
+ALTER TABLE realmbiome ADD bid TEXT;
+UPDATE realmbiome SET bid=bid__tmp;
+ALTER TABLE realmbiome DROP COLUMN bid__tmp;
+success!
+DROP TABLE realmbiome ;
+success!
+timestamp: 2015-11-12T12:38:01.690658
+CREATE TABLE realmbiome(
+    id SERIAL PRIMARY KEY,
+    tid INTEGER,
+    bid TEXT,
+    seg_area FLOAT8,
+    theme_area FLOAT8,
+    base_area FLOAT8
+);
+success!
