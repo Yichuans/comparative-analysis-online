@@ -9,6 +9,9 @@
 from gluon.custom_import import track_changes
 track_changes(True)
 
+## make sure db is accessibe in user define db
+from gluon import current
+
 ## if SSL/HTTPS is properly configured and you want all HTTP requests to
 ## be redirected to HTTPS, uncomment the line below:
 # request.requires_https()
@@ -17,6 +20,7 @@ if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
     # db = DAL('sqlite://storage.sqlite')
     db = DAL('postgres://postgres:gisintern@localhost/postgis')
+    current.db = db
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
@@ -84,13 +88,21 @@ use_janrain(auth,filename='private/janrain.key')
 ## >>> rows=db(db.mytable.myfield=='value').select(db.mytable.ALL)
 ## >>> for row in rows: print row.id, row.myfield
 #########################################################################
-db.define_table('wwfgeom', 
-    Field('recid', 'integer'),
-    Field('geom', 'geometry()'))
 
-db.define_table('tempgeom',
-    Field('geom', 'geometry()'))
+# intersection table holding result of user geometry vs other base layers
+db.define_table('result',
+    Field('tempid', 'integer'),
+    Field('baselayer', 'text'),
+    Field('bid', 'text')
+)
 
+# this table checks if an intersection has been done before
+db.define_table('intersect_taken',
+    Field('tempid', 'integer'),
+    Field('baselayer', 'text'),
+    Field('intersection', 'boolean'))
+
+# pre-authored realmbiome result table for WH
 db.define_table('realmbiome',
     Field('tid', 'integer'),
     Field('bid', 'text'),
@@ -98,3 +110,32 @@ db.define_table('realmbiome',
     Field('theme_area', 'double'),
     Field('base_area', 'double'))
 
+    # lookup table for realmbiome
+db.define_table('realmbiome_lookup',
+    Field('bid', 'text'),
+    Field('name', 'text'))
+
+# world heritage attribute table
+db.define_table('wh',
+    Field('wdpaid', 'integer'),
+    Field('unesid', 'integer'),
+    Field('en_name', 'text'),
+    Field('fr_name', 'text'),
+    Field('country', 'text'),
+    Field('criteria', 'text')
+    )
+
+# GEOMETRIES
+# # # a test table with wwf ecoregion geometry
+# db.define_table('wwfgeom', 
+#     Field('recid', 'integer'),
+#     Field('geom', 'geometry()'))
+
+db.define_table('realmbiome_geom',
+    Field('bid', 'text'),
+    Field('geom', 'geometry()'))
+
+# temporary table holding user submitted geometry
+db.define_table('tempgeom',
+    Field('tempid', 'integer'),
+    Field('geom', 'geometry()'))
