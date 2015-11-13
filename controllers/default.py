@@ -98,6 +98,7 @@ def api():
 @request.restful()
 def geoapi():
     from gluon.serializers import loads_json
+    from ca import insert_temp_geom
     # response.view = 'generic.json'
     def GET(recid):
         ## the result is only part of the geojson
@@ -109,38 +110,17 @@ def geoapi():
 
 
     def POST(**geojson_dict):
-        # geojson_dict is input from jquery, with its key the content
-
-
         response.view = 'generic.json'
 
-        # python's own json utilities. json.dumps() converts a dictionary to json format string
-        import json
+        #
+        tempid = insert_temp_geom(geojson_dict)
 
-        # loads_json converts a string of json to a python dict
-        json_dict = loads_json(geojson_dict.keys()[0])
+        # debugging purposes
+        if tempid:
+            return 'success, id {}'.format(tempid)
 
-        # if en empty geojson is submitted
-        if len(json_dict['features']) == 0:
-            return 'No feature submitted'
-
-        # for each geojson feature do a db insert
-        for eachfeature in json_dict['features']:
-
-            # each feature is a dict of keys: geometry, type and properties, of which geometry is of interest
-            feature_dict = eachfeature['geometry']
-
-            # ensure crs is included, by default WGS84
-            feature_dict['crs'] = {'type': 'name', 'properties':{'name':'EPSG:4326'}}
-
-            # dump in json format and construct sql to insert record
-            sql = "INSERT INTO tempgeom (geom) VALUES (st_geomfromgeojson({!r}));".format(json.dumps((feature_dict)))
-
-            # run queries
-            db.executesql(sql)
-
-        # return feature_list[0]
-        return sql
+        else:
+            return 'failed to post json'
 
 
     return locals()
