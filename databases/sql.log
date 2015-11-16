@@ -149,3 +149,53 @@ CREATE TABLE realmbiome(
     base_area FLOAT8
 );
 success!
+timestamp: 2015-11-13T10:47:33.587387
+CREATE TABLE wh(
+    id SERIAL PRIMARY KEY,
+    wdpaid INTEGER,
+    unesid INTEGER,
+    en_name TEXT,
+    fr_name TEXT,
+    country TEXT,
+    criteria TEXT
+);
+success!
+timestamp: 2015-11-13T14:28:21.413303
+ALTER TABLE tempgeom ADD tempid INTEGER;
+success!
+timestamp: 2015-11-13T16:08:39.716441
+CREATE TABLE result(
+    id SERIAL PRIMARY KEY,
+    tempid INTEGER,
+    bid TEXT,
+    baselayer TEXT
+);
+success!
+timestamp: 2015-11-13T17:08:25.617830
+CREATE TABLE intersect_taken(
+    id SERIAL PRIMARY KEY,
+    tempid INTEGER,
+    baselayer TEXT,
+    intersection CHAR(1)
+);
+success!
+timestamp: 2015-11-13T17:08:25.639801
+CREATE TABLE realmbiome_lookup(
+    id SERIAL PRIMARY KEY,
+    bid TEXT,
+    name TEXT
+);
+success!
+timestamp: 2015-11-13T17:08:25.651667
+CREATE TABLE realmbiome_geom(
+    id SERIAL PRIMARY KEY,
+    bid TEXT
+);
+success!
+DROP TABLE wwfgeom ;
+DROP TABLE wwfgeom ;
+DROP TABLE wwfgeom ;
+success!
+timestamp: 2015-11-16T11:56:34.344535
+ALTER TABLE intersect_taken DROP COLUMN intersection;
+success!

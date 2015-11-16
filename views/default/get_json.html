@@ -61,10 +61,15 @@
 		mapl.addLayer(b_toner);
 
 		// add a local geojson layer: access control allow-origin 
-		$.get('/api/default/geoapi/61404', function(data){
+		$.get('{{=URL('geoapi', 'tempgeom', '34')}}', function(data){
 			var testlayer = new L.geoJson(data);
 			console.log(data);
+
+
+
 			mapl.addLayer(testlayer);
+
+			mapl.fitBounds(testlayer.getBounds())
 		})
 
 		// base maps

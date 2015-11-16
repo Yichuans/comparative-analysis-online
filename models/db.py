@@ -99,8 +99,7 @@ db.define_table('result',
 # this table checks if an intersection has been done before
 db.define_table('intersect_taken',
     Field('tempid', 'integer'),
-    Field('baselayer', 'text'),
-    Field('intersection', 'boolean'))
+    Field('baselayer', 'text'))
 
 # pre-authored realmbiome result table for WH
 db.define_table('realmbiome',

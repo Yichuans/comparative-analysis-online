@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
+
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+ <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
+
+
+
+<!-- mapbox dependencies -->
+<!-- <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' /> -->
+
+
+<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+
+
+<!-- draw control -->
+<script src="{{=URL('static', 'js/leaflet.draw.js')}}"></script>
+<link rel="stylesheet" href = "{{=URL('static', 'js/leaflet.draw.css')}}"/>
+
+<!-- support for esri layers -->
+<script src="http://cdn.jsdelivr.net/leaflet.esri/1.0.0/esri-leaflet.js"></script>
+
+<!-- map style -->
+ <style type="text/css">
+ #map { height: 580px; }
+
+ /* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+ </style>
+
+</head>
+
+
+<body>
+<div id="map"></div>
+
+ <p> Test to submit boundary</p>
+	
+<button type="button" id="btn-save" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+  post GeoJSON to service 'geoapi'
+</button>
+
+<button type="button" id="btn-clear" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+  Clear map
+</button>
+<div id='result'></div>
+<div class="modal"><!-- Place at bottom of page --></div>
+
+<script>
+    $(document).ready(function(){
+        // global land cover 30 NGCC
+        // mapbox tiles basemap - not used here
+		var b_toner = new L.StamenTileLayer("toner");
+		var b_watercolor = new L.StamenTileLayer("watercolor");
+
+		var mapl = new L.Map("map", {
+		    center: new L.LatLng(30, 120),
+		    // drawControl: true,
+		    zoom: 6,
+		    // layers: [b_toner, b_watercolor]
+		    layers: [b_toner]
+		});
+
+		mapl.addLayer(b_toner);
+
+		// base maps
+		var baseMaps = {
+		    "Stamen toner": b_toner,
+		    "Stamen watercolor": b_watercolor
+		};
+
+
+		// esri maps
+		var wh = L.esri.featureLayer({url: 'http://services5.arcgis.com/Mj0hjvkNtV7NRhA7/arcgis/rest/services/WH_2015/FeatureServer/0'}).addTo(mapl);
+
+		var featureMaps = {
+			'Natural World Heritage sites': wh
+		};
+
+		// control for basemaps and other layers
+		L.control.layers(baseMaps, featureMaps).addTo(mapl);
+
+		// add empty feature group for holding drawn items
+		var drawnItems = new L.FeatureGroup();
+		mapl.addLayer(drawnItems);
+
+		// Initialise the draw control and pass it the FeatureGroup of editable layers
+		var drawControl = new L.Control.Draw({
+		    edit: {
+		        featureGroup: drawnItems
+		    },
+		    draw: {
+		    	polyline: false,
+		    	marker: false,
+		    	circle: false
+		    }
+		});
+		mapl.addControl(drawControl);
+
+
+		// once draw complete
+		mapl.on('draw:created', function(e) {
+		    var type = e.layerType,
+		        layer = e.layer;
+
+		    // Do whatever else you need to. (save to db, add to map etc)
+		    // map.addLayer(layer);
+		    drawnItems.addLayer(layer);
+
+		    // console.log(map)
+		});
+
+		// buttons for adding and removing feature layers
+			// add to a new fg 
+		  var geojson_fg = new L.FeatureGroup();
+		  mapl.addLayer(geojson_fg);
+
+		  $('#btn-save').on('click', function () {
+		  	// add a waiting circle
+		  	$body = $('body');
+			$body.addClass("loading"); 
+
+		  	// testing geojson layer
+		  	var fgeojson = drawnItems.toGeoJSON();
+		  	// setTimeout(function(){}, 5000);
+		  	drawnItems.clearLayers(); //get rid of all previous layers in the drawnItems.
+
+		  	// load geojson back to map
+		  	layer = L.geoJson(fgeojson);
+		  	geojson_fg.addLayer(layer);
+
+		  	mapl.addLayer(geojson_fg);
+
+
+		  	// JSON.stringify converts an json object to a string presentation. This is then sent to the server. It will be the key (of the key-vale pair) of the resulting form submission
+		  	$.ajax({url:'{{=URL('geoapi')}}', 
+		  		data:JSON.stringify(fgeojson),
+		  		type: "POST", 
+			  	success:function(data){
+		
+			  		console.log(data);
+
+			  		$body.removeClass("loading"); 
+			  		$('#result').html(data);
+
+			  		// redirection
+			  		window.location.href = "{{=URL('comparative_analysis')}}"+ '/' + data;
+			  		// alert('success');
+			  	}, error:function(){
+
+			  		$body.removeClass("loading"); 
+			  		$('#result').html('Error occurred');
+
+			  	}, timeout: 10000
+
+		  	});
+
+		  })
+
+		  $('#btn-clear').on('click', function () {
+		  	// console.log(mapl);
+
+		  	// setTimeout(function(){}, 5000);
+		  	drawnItems.clearLayers(); //get rid of all previous draw layers.
+
+		  	// if the layers are on the map already
+		  	// mapl.eachLayer(function(layer){
+		  	// 	if (mapl.hasLayer(geojson_fg)){
+		  	// 		mapl.removeLayer(geojson_fg);
+		  	// 	}
+		  		// mapl.removeLayer(layer);
+		  	geojson_fg.clearLayers();
+
+		  	})
+
+
+		})
+</script>
+
+
+</body>
+</html>

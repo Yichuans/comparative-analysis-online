@@ -9,6 +9,9 @@
 ## - call exposes all registered services (none by default)
 #########################################################################
 
+## import the comparative analysis module
+import ca
+
 def index():
     """
     example action using the internationalization operator T and flash
@@ -97,30 +100,27 @@ def api():
 # test to get geom as json from pgis database, asyncly
 @request.restful()
 def geoapi():
-    from gluon.serializers import loads_json
-    from ca import insert_temp_geom
+    
+    from ca import insert_temp_geom, get_geom_as_json_by_uid
     # response.view = 'generic.json'
-    def GET(recid):
+    def GET(layer_geom, uid):
         ## the result is only part of the geojson
-        rows = db(db.wwfgeom.recid == recid).select(db.wwfgeom.geom.st_asgeojson().with_alias('geom'))
 
-        ## geojson need to be constructured
-        features = [{"type": "Feature", "geometry": loads_json(row['geom'])} for row in rows]
-        return response.json({"type": "FeatureCollection", "features": features})
+        result_json_dict = get_geom_as_json_by_uid(uid, tab_geom=layer_geom)
+
+        if result_json_dict:
+            return response.json(result_json_dict)
+        else:
+            return 'Invalid request'
 
 
     def POST(**geojson_dict):
         response.view = 'generic.json'
 
-        #
+        # unique identifier for the inserted geom
         tempid = insert_temp_geom(geojson_dict)
 
-        # debugging purposes
-        if tempid:
-            return 'success, id {}'.format(tempid)
-
-        else:
-            return 'failed to post json'
+        return tempid
 
 
     return locals()
@@ -139,7 +139,19 @@ def welcome():
 
 def comparative_analysis():
     # this is the page showing the result of the comparative analysis
-    return dict()
+    tempid = request.args[0]
+
+    ca.run_intersection(tempid)
+    bids = ca.get_bids_by_tempid(tempid)
+
+    # default WWF realm-biome combination
+    result = dict()
+
+    for bid in bids:
+        # get result as
+        result[bid] = [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid)]
+
+    return dict(wwf = result)
 
 def submit_boundary():
     # this is the page to submit a drawn polygon
