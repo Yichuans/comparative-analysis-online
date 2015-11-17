@@ -242,19 +242,36 @@ def run_intersection(tempid, tab=REALMBIOME):
         return 'Error occurred during the intersection'
 
 
-## serialise result in HTML
+## serialise result for each wh row as DIV in HTML
 def div_wh_row(whrow):
     # still needs a picture element
 
-    from gluon.html import *
+    from gluon.html import P, A, IMG, DIV
     whname = P(whrow.en_name, _class='site-name')
     whcountry = P(whrow.country, _class='country')
     whcrit = P(whrow.criteria, _class='crit')
     unescolink = A('UNESCO WHC site page', _href='http://whc.unesco.org/en/list/'+ str(whrow.unesid))
     wdpalink = A('ProtectedPlanet page', _href='http://www.protectedplanet.net/'+str(whrow.wdpaid))
+    img = IMG(_src=get_photo_url(whrow.unesid))
 
-    div = DIV(whname, whcountry, whcrit, unescolink, wdpalink, _class='wh-div')
+    div = DIV(img, whname, whcountry, whcrit, unescolink, wdpalink, _class='wh-div')
     return div
+
+
+def get_photo_url(unesid):
+    from gluon.html import URL
+
+    import os, re
+    photo_path = current.request.folder + 'static/photos'
+    
+    for each in os.listdir(photo_path):
+        match_obj = re.match('.+_' + str(unesid) + '_.+', each)
+        if match_obj:
+            return URL('static', 'photos/' + match_obj.string)
+
+
+    return URL('static', 'photos/na.png')
+    
 
 
 ## ======== TEST =========

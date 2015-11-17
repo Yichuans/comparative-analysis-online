@@ -199,3 +199,48 @@ success!
 timestamp: 2015-11-16T11:56:34.344535
 ALTER TABLE intersect_taken DROP COLUMN intersection;
 success!
+timestamp: 2015-11-17T12:02:30.735511
+CREATE TABLE kba(
+    id SERIAL PRIMARY KEY,
+    tid INTEGER,
+    bid TEXT,
+    seg_area FLOAT8,
+    theme_area FLOAT8,
+    base_area FLOAT8
+);
+success!
+timestamp: 2015-11-17T12:02:30.745460
+CREATE TABLE hs(
+    id SERIAL PRIMARY KEY,
+    tid INTEGER,
+    bid TEXT,
+    seg_area FLOAT8,
+    theme_area FLOAT8,
+    base_area FLOAT8
+);
+success!
+timestamp: 2015-11-17T12:02:30.765609
+CREATE TABLE kba_geom(
+    id SERIAL PRIMARY KEY,
+    bid TEXT
+);
+success!
+timestamp: 2015-11-17T12:02:30.783052
+CREATE TABLE hs_geom(
+    id SERIAL PRIMARY KEY,
+    bid TEXT
+);
+success!
+timestamp: 2015-11-17T12:02:30.792622
+CREATE TABLE whgeom(
+    id SERIAL PRIMARY KEY,
+    wdpaid INTEGER
+);
+success!
+timestamp: 2015-11-17T12:33:00.913515
+CREATE TABLE kba_lookup(
+    id SERIAL PRIMARY KEY,
+    bid TEXT,
+    name TEXT
+);
+success!

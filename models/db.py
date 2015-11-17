@@ -89,6 +89,7 @@ use_janrain(auth,filename='private/janrain.key')
 ## >>> for row in rows: print row.id, row.myfield
 #########################################################################
 
+## === RESULTS
 # intersection table holding result of user geometry vs other base layers
 db.define_table('result',
     Field('tempid', 'integer'),
@@ -96,11 +97,15 @@ db.define_table('result',
     Field('bid', 'text')
 )
 
+# db.executesql('CREATE INDEX ')
+
 # this table checks if an intersection has been done before
 db.define_table('intersect_taken',
     Field('tempid', 'integer'),
     Field('baselayer', 'text'))
 
+
+## === REALM-BIOME
 # pre-authored realmbiome result table for WH
 db.define_table('realmbiome',
     Field('tid', 'integer'),
@@ -114,6 +119,30 @@ db.define_table('realmbiome_lookup',
     Field('bid', 'text'),
     Field('name', 'text'))
 
+
+# pre-authored KBA
+db.define_table('kba',
+    Field('tid', 'integer'),
+    Field('bid', 'text'),
+    Field('seg_area', 'double'),
+    Field('theme_area', 'double'),
+    Field('base_area', 'double'))
+
+    # lookup table for KBA
+db.define_table('kba_lookup',
+    Field('bid', 'text'),
+    Field('name', 'text'))
+
+# pre-authored HS
+db.define_table('hs',
+    Field('tid', 'integer'),
+    Field('bid', 'text'),
+    Field('seg_area', 'double'),
+    Field('theme_area', 'double'),
+    Field('base_area', 'double'))
+
+
+## === WH
 # world heritage attribute table
 db.define_table('wh',
     Field('wdpaid', 'integer'),
@@ -124,17 +153,28 @@ db.define_table('wh',
     Field('criteria', 'text')
     )
 
-# GEOMETRIES
-# # # a test table with wwf ecoregion geometry
-# db.define_table('wwfgeom', 
-#     Field('recid', 'integer'),
-#     Field('geom', 'geometry()'))
-
+## === GEOMETRIES
+# WWF realmbiome
 db.define_table('realmbiome_geom',
+    Field('bid', 'text'),
+    Field('geom', 'geometry()'))
+
+# KBA 
+db.define_table('kba_geom',
+    Field('bid', 'text'),
+    Field('geom', 'geometry()'))
+
+# Biodiv hotspot
+db.define_table('hs_geom',
     Field('bid', 'text'),
     Field('geom', 'geometry()'))
 
 # temporary table holding user submitted geometry
 db.define_table('tempgeom',
     Field('tempid', 'integer'),
+    Field('geom', 'geometry()'))
+
+# WH
+db.define_table('whgeom',
+    Field('wdpaid', 'integer'),
     Field('geom', 'geometry()'))
