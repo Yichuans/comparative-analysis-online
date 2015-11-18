@@ -11,31 +11,141 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
+        <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+        <!-- support for esri layers -->
+        <script src="http://cdn.jsdelivr.net/leaflet.esri/1.0.0/esri-leaflet.js"></script>
+
+        <!-- map style -->
+         <style type="text/css">
+            #map { height: 380px; }
+
+
+            img {
+                width:150px;
+                height:150px;
+            }
+         </style>
+
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-	    <!-- create an unordered list of div items-->
-        {{for bid in wwf.keys():}}
-	        {{heading = H2(bid)}}
-	        {{=heading}}
-		    {{=UL(*[LI(div) for div in wwf[bid]])}}
-	    {{pass}}
+        <!-- map element -->
+        <div id="map"></div>
+
+        <!-- realmbiome -->
+        {{=H1('Realm-Biome')}}
+
+        {{# check the returned dictionary, if not empty list out DIVs}}
+        {{if len(rb)==0:}}
+            {{=P('Does not overlap with any Realm-Biome')}}
+        {{else:}}
+            {{for bid in rb.keys():}}
+    	        {{heading = H2(bid)}}
+    	        {{=heading}}
+
+                {{if len(rb[bid])==0:}}
+                    {{=P('{} does not have any World Heritage site'.format(bid))}}
+                {{else:}}
+    		        {{=UL(*[LI(div) for div in rb[bid]])}}
+                {{pass}}
+    	    {{pass}}
+        {{pass}}
+
+        <!-- hotspot -->
+        {{=H1('Biodiversity Hotspot')}}
+
+        {{if len(hs)==0:}}
+            {{=P('Does not overlap with any Biodiversity Hotspot')}}
+        {{else:}}
+            {{for bid in hs.keys():}}
+                {{heading = H2(bid)}}
+                {{=heading}}
+
+                {{if len(hs[bid])==0:}}
+                    {{=P('{} does not have any World Heritage site'.format(bid))}}
+                {{else:}}
+                    {{=UL(*[LI(div) for div in hs[bid]])}}
+                {{pass}}
+            {{pass}}
+        {{pass}}
+
+        <!-- kba -->
+        {{=H1('Key Biodiversity Areas (non-avian)')}}
+
+        {{if len(kba)==0:}}
+            {{=P('Does not overlap with any KBA')}}
+        {{else:}}
+            {{for bid in kba.keys():}}
+                {{heading = H2(bid)}}
+                {{=heading}}
+
+                {{if len(kba[bid])==0:}}
+                    {{=P('{} does not have any World Heritage site'.format(bid))}}
+                {{else:}}
+                    {{=UL(*[LI(div) for div in kba[bid]])}}
+                {{pass}}
+            {{pass}}
+        {{pass}}
+
+        // <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        // <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+
+        // <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        // <script>
+        //     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+        //     function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        //     e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        //     e.src='//www.google-analytics.com/analytics.js';
+        //     r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+        //     ga('create','UA-XXXXX-X');ga('send','pageview');
+        // </script>
+
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+                // global land cover 30 NGCC
+                // mapbox tiles basemap - not used here
+                var b_toner = new L.StamenTileLayer("toner");
+                var b_watercolor = new L.StamenTileLayer("watercolor");
+
+                var mapl = new L.Map("map", {
+                    layers: [b_toner]
+                });
+
+                mapl.addLayer(b_toner);
+
+                // base maps
+                var baseMaps = {
+                    "Stamen toner": b_toner,
+                    "Stamen watercolor": b_watercolor
+                };
+
+                        
+                // control for basemaps and other layers
+                L.control.layers(baseMaps).addTo(mapl);
+
+                // add a local geojson layer: access control allow-origin 
+                $.get('{{=URL('geoapi', 'tempgeom', request.args[0])}}', function(data){
+                    var tempgeom = new L.geoJson(data);
+                    console.log(data);
+
+                    mapl.addLayer(tempgeom);
+                    maxbounds = tempgeom.getBounds()
+                    mapl.fitBounds(maxbounds)
+                    mapl.setMaxBounds(maxbounds)
+                })
+
+                })
 
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
-
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
+
+
     </body>
 </html>

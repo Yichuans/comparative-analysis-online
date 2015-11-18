@@ -178,3 +178,17 @@ db.define_table('tempgeom',
 db.define_table('whgeom',
     Field('wdpaid', 'integer'),
     Field('geom', 'geometry()'))
+
+
+## ===== INDEX ======= run once only
+# db.executesql('CREATE INDEX whgeom_idx ON whgeom USING GIST(geom)')
+# db.executesql('CREATE INDEX tempgeom_idx ON tempgeom USING GIST(geom)')
+# db.executesql('CREATE INDEX realmbiome_geom_idx ON realmbiome_geom USING GIST(geom)')
+# db.executesql('CREATE INDEX kba_geom_idx ON kba_geom USING GIST(geom)')
+# db.executesql('CREATE INDEX hs_geom_idx ON hs_geom USING GIST(geom)')
+
+# # non spatial
+# db.executesql('CREATE UNIQUE INDEX wh_wdpaid_idx ON wh (wdpaid)')
+# db.executesql('CREATE UNIQUE INDEX kba_lookup_bid_idx ON kba_lookup (bid)')
+# db.executesql('CREATE UNIQUE INDEX realmbiome_lookup_bid_idx ON realmbiome_lookup (bid)')
+

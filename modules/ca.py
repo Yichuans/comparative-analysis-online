@@ -9,6 +9,12 @@ TID = 'tid'
 
 # pre-authored result
 REALMBIOME = 'realmbiome'
+KBA = 'kba'
+HS = 'hs'
+
+# lookup-tables
+REALMBIOME_LOOKUP = 'realmbiome_lookup'
+KBA_LOOKUP = 'kba_lookup'
 
 # theme layers
 WH = 'wh'
@@ -91,7 +97,7 @@ def get_wh_rows_by_bid(bid, tab=REALMBIOME):
         base_table = db[tab]
 
         # make a join between the two tables
-        rows = db((wh['wdpaid']==base_table[TID])& (base_table[BID]==bid)).select(wh.ALL)
+        rows = db((wh['wdpaid']==base_table[TID]) & (base_table[BID]==bid)).select(wh.ALL)
 
         return rows
     else:
@@ -146,7 +152,7 @@ def insert_temp_geom(geojson_dict):
     else:
         return tempid
 
-# get bids 
+# get bids from the intersection result table
 def get_bids_by_tempid(tempid, tab=REALMBIOME):
     db = current.db
 
@@ -156,6 +162,16 @@ def get_bids_by_tempid(tempid, tab=REALMBIOME):
     rows = db(select_query).select(db.result.bid)
 
     return [row.bid for row in rows]
+
+def get_bids_by_wdpaid(wdpaid, tab):
+    db = current.db
+
+    # query
+    select_query = (db[tab].tid==wdpaid)
+    rows = db(select_query).select(db[tab].bid)
+
+    return [row.bid for row in rows]    
+
 
 # main process function to run intersection
 def run_intersection(tempid, tab=REALMBIOME):
@@ -272,7 +288,24 @@ def get_photo_url(unesid):
 
     return URL('static', 'photos/na.png')
     
+## look up function
+def lookup_bid(bid, tab):
+    db = current.db
+    if tab not in [REALMBIOME, KBA]:
+        raise Exception('lookup table must be {} or {}'.format(REALMBIOME, KBA))
 
+    if tab == REALMBIOME:
+        tab_lookup = REALMBIOME_LOOKUP
+    else:
+        tab_lookup = KBA_LOOKUP
+
+    rows =  db(db[tab_lookup].bid==bid).select(db[tab_lookup].name)
+
+    if len(rows)==0:
+        raise Exception('Bid {} not found in the lookup table of {}'.format(bid, tab))
+
+    else:
+        return rows[0].name
 
 ## ======== TEST =========
 # ca.run_intersection(15)

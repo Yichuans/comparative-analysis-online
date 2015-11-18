@@ -141,17 +141,74 @@ def comparative_analysis():
     # this is the page showing the result of the comparative analysis
     tempid = request.args[0]
 
-    ca.run_intersection(tempid)
-    bids = ca.get_bids_by_tempid(tempid)
+    ## WWF realm-biome combination
+    rb = dict()
 
-    # default WWF realm-biome combination
-    result = dict()
+        # run intersection
+    ca.run_intersection(tempid, ca.REALMBIOME)
+    bids = ca.get_bids_by_tempid(tempid, ca.REALMBIOME)
+        # lookup needed
+    for bid in bids:
+        rb[ca.lookup_bid(bid, ca.REALMBIOME)] = [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid, ca.REALMBIOME)]
+
+    ## KBA
+    kba = dict()
+
+        # run intersection
+    ca.run_intersection(tempid, ca.KBA)
+    bids = ca.get_bids_by_tempid(tempid, ca.KBA)
+        # lookup needed
+    for bid in bids:
+        kba[ca.lookup_bid(bid, ca.KBA)] = [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid, ca.KBA)]
+
+    ## HS
+    hs = dict()
+
+        # run intersection
+    ca.run_intersection(tempid, ca.HS)
+    bids = ca.get_bids_by_tempid(tempid, ca.HS)
 
     for bid in bids:
-        # get result as
-        result[bid] = [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid)]
+        hs[bid] = [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid, ca.HS)]
 
-    return dict(wwf = result)
+    return dict(rb=rb, kba=kba, hs=hs)
+
+# maybe a further functionality to be exposed
+def comparing_wh():
+    # this is similar to comparative analysis except the input also a WH site
+    # result will exclude the site itself
+    # note wdpaid is a string
+    wdpaid = request.args[0]
+
+    ## WWF realm-biome combination
+    rb = dict()
+
+    # no need to run intersection    
+    bids = ca.get_bids_by_wdpaid(wdpaid, ca.REALMBIOME)
+        # lookup needed
+    for bid in bids:
+        rb[ca.lookup_bid(bid, ca.REALMBIOME)] = \
+        [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid, ca.REALMBIOME) if row.wdpaid!=int(wdpaid)]
+
+    ## KBA
+    kba = dict()
+
+    bids = ca.get_bids_by_wdpaid(wdpaid, ca.KBA)
+        # lookup needed
+    for bid in bids:
+        kba[ca.lookup_bid(bid, ca.KBA)] = \
+        [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid, ca.KBA) if row.wdpaid!=int(wdpaid)]
+
+    ## HS
+    hs = dict()
+
+    bids = ca.get_bids_by_wdpaid(wdpaid, ca.HS)
+    for bid in bids:
+        hs[bid] = \
+        [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid, ca.HS) if row.wdpaid!=int(wdpaid)]
+
+    return dict(rb=rb, kba=kba, hs=hs)
+
 
 def submit_boundary():
     # this is the page to submit a drawn polygon
