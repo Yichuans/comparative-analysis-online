@@ -261,6 +261,7 @@ def run_intersection(tempid, tab=REALMBIOME):
 ## serialise result for each wh row as DIV in HTML
 def div_wh_row(whrow):
     # still needs a picture element
+    # use bootstrap classes
 
     from gluon.html import P, A, IMG, DIV
     whname = P(whrow.en_name, _class='site-name')
@@ -268,9 +269,9 @@ def div_wh_row(whrow):
     whcrit = P(whrow.criteria, _class='crit')
     unescolink = A('UNESCO WHC site page', _href='http://whc.unesco.org/en/list/'+ str(whrow.unesid))
     wdpalink = A('ProtectedPlanet page', _href='http://www.protectedplanet.net/'+str(whrow.wdpaid))
-    img = IMG(_src=get_photo_url(whrow.unesid))
+    img = IMG(_src=get_photo_url(whrow.unesid), _class='img-circle')
 
-    div = DIV(img, whname, whcountry, whcrit, unescolink, wdpalink, _class='wh-div')
+    div = DIV(DIV(img), DIV(whname, whcountry, whcrit, unescolink, wdpalink), _class='wh-div')
     return div
 
 

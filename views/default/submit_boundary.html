@@ -1,21 +1,17 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
 <head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
-
-
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
- <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
-
-
-
-<!-- mapbox dependencies -->
-<!-- <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' /> -->
-
-
+<script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
 <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
 
+
+<!-- bootstrap style -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
 <!-- draw control -->
 <script src="{{=URL('static', 'js/leaflet.draw.js')}}"></script>
@@ -25,7 +21,7 @@
 <script src="http://cdn.jsdelivr.net/leaflet.esri/1.0.0/esri-leaflet.js"></script>
 
 <!-- map style -->
- <style type="text/css">
+<style type="text/css">
  #map { height: 580px; }
 
  /* Start by setting display:none to make this hidden.
@@ -59,25 +55,45 @@ body.loading {
 body.loading .modal {
     display: block;
 }
- </style>
+</style>
 
 </head>
-
-
 <body>
-<div id="map"></div>
 
- <p> Test to submit boundary</p>
+<main>
+<section>
+<!-- the map section -->
+	<div id="map"></div>
+</section>
+
+<section>
+<!-- instructions on how to use the map controls -->
+<!-- TO BE ADDED HERE -->
 	
-<button type="button" id="btn-save" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">Submit boundary</button>
+</section>	
 
-<button type="button" id="btn-clear" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
-  Clear map
-</button>
+<section>
+<!-- buttons to submit to server -->
+	<button type="button" id="btn-save" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">Submit boundary</button>
+	<button type="button" id="btn-clear" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+	  Clear map
+	</button>
+</section>
+
+</main>
+
 
 <div id='result'></div>
-<div class="modal"><!-- Place at bottom of page --></div>
 
+
+<footer>
+	<!-- Footer -->
+</footer>
+
+<div class="modal"><!-- Place at bottom of page --></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script> 
 <script>
     $(document).ready(function(){
         // global land cover 30 NGCC
