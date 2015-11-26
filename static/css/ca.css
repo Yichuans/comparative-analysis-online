@@ -1,0 +1,123 @@
+/*general =================*/
+h1, h2, h3, h4, h5 {
+	color: #8c0303;
+}
+
+/*header ==================*/
+.ca-top-container {
+	margin-top:0px;
+	margin-bottom: 0px;
+	background: #8c0303;
+	height: 40px;
+	border-color: transparent;
+
+}
+
+/*IUCN logo*/
+.ca-top-container .logo {
+	height: 40px;
+	padding-right: 10px;
+
+	/*add a white bar*/
+	border-right: #ffffff solid 1px;
+	margin-right: 10px;
+
+}
+
+	/*prototype version*/
+.ca-top-bar p{
+	color: #ffffff;
+	font-style: italic;
+	margin-bottom: 0px;
+}
+	/*banner font color*/
+.ca-top-bar h3{
+	margin-top:5px;
+	margin-bottom:5px;
+	font-size: 18px;
+	color: #ffffff;
+}
+
+.ca-top-bar div{
+	padding-right: 10px;
+	
+}
+
+/*jumbotron=================*/
+.jumbotron {
+	text-align: center;
+	background-image: url('../images/zjj2.jpg');
+}
+
+.jumbotron {
+	color: #ffffff;
+	text-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
+
+.jumbotron .page-header + p{
+	/*width:65%;*/
+	/*border-top: 1px solid #ffffff;*/
+	/*border-bottom: 1px solid #ffffff;*/
+	/*color: #ffffff;*/
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+	/*start button*/
+	.start-button {
+		background-color: #8c0303;
+		border-color: transparent;
+		border-radius: 50px;
+		padding:10px 50px;
+	}
+
+	.start-button:hover {
+		background-color:#bf0404;
+		border-color: transparent;
+
+	}
+/*footer==================*/
+footer {
+	color: #ffffff;
+	background-color: #8c0303;
+	min-height: 200px;
+}
+
+.ca-footer {
+
+}
+
+
+.col-right {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	display:inline-block;
+	text-align:right;
+}
+
+
+@media (max-width: 768px) {
+	.col-right {
+    text-align:center;
+    /*margin-right:-4px;*/
+	}
+}
+
+.col-left {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	display:inline-block;
+    text-align:left;
+}
+
+@media (max-width: 768px) {
+	.col-left {
+    text-align:center;
+    /*margin-right:-4px;*/
+	}
+}
+.logo-holder img {
+	height: 40px;
+	padding-right: 10px;
+
+}

@@ -9,6 +9,9 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
+    <!-- add ca style -->
+    <link rel='stylesheet' href="{{=URL('static', 'css/ca.css')}}">
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -17,59 +20,56 @@
     <![endif]-->
   </head>
   <body>
+    {{include 'default/topbar.html'}}   
     <!-- in order to make it full width -->
     <section class='jumbotron'>
-        <div class='container page-header'>
-            {{=H1('Welcome to the Comparative Analysis online')}}
-            {{=P('For World Heritage nominations under criteria (ix) and (x)')}}
+        <div class='container'>
+            <div class='page-header'>
+                {{=H1('Welcome to IUCN Global Comparative Analysis Online')}}
+            </div>
+            {{=P('Explore gaps and comparisons with biodiversity World Heritage sites')}}
+            {{=A('Start', _href=URL('submit_boundary'), _class='btn btn-primary btn-lg start-button', _role='button')}}           
         </div>
     </section>
 
     <article class='container'>
-    <div class='container-fluid'>
+    <!-- <div class='container-fluid'> -->
     <main>
-
-
-            <section>
-                {{=A('Start', _href=URL('submit_boundary'), _class='btn btn-primary btn-lg', _role='button')}}           
-            </section>
-
-
-            <section>
+        <div class='row'>
+            <section class='col-sm-6'>
                 {{=H2('About')}}
                 {{=P('This is a prototype developed by IUCN to undertake global comparative analyeis for biodiversity World Heritage nominations online. The tool will enable any interested parties to carry out an initial evaluation of their proposed biodiversity site on their own, empower non specialist to understand the logicall comparison framework, and potentially reduce the risk of unsuitabe sites being submitted.')}}
                 {{=P('At the moment, this proof of concept product only allows the comparison of examples of global biogeography, identified broad conservation priorities, and important sites that are of great biodiversity values')}}
             </section>
 
-            <section>
+            <section class='col-sm-6'>
                 {{=H2('Caveats')}}
                 {{=P('The gaps identified and World Heritage sites found in the same biogeographical regions, priorites and sites of biodiversity values only indicate a spatially overlapping relationship based on the underlying data, which can help to identify under-represented areas and guide the search of potential nominations. This does not imply the identification of any Outstanding Universal Values (OUV) that a successful World Heritage nomination would need to demonstrate. For this purpose, a rigourous, comprehensive comparative analysis must be undertaken, taking into consideration all information beyond geospatial analyses')}}
             </section>
+        </div>
 
-            <section>
+        <div class='row'>
+            <section class='col-sm-6'>
                 {{=H2('Acknowledgement')}}
                 {{=P('We thank UNESCO for funding the development of this prototype and UNEP World Conservation Monitoring Centre for design and technical support. XXX(TBA)')}}
             </section>
 
-            <section>
+            <section class='col-sm-6'>
                 {{=H2('Contact us')}}
                 {{=P('For enquiries please email XXX@iucn.org')}}
             </section>
+        </div>
 
         </article>
     </main>
 
-
-    <footer>
-        <!-- here is the copy right, institue log etc -->
-
-    </footer>
+    {{include 'default/footer.html'}}   
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script> 
   
-    </div>  
+    <!-- </div>   -->
   </body>
 </html>
