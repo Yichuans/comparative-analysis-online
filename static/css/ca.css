@@ -1,27 +1,51 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+@import url(https://fonts.googleapis.com/css?family=Muli);
+
 /*general =================*/
 h1, h2, h3, h4, h5 {
+	font-family: 'Roboto';
 	color: #8c0303;
+}
+
+p {
+	font-family: 'Muli';
+}
+
+a {
+	font-family: 'Roboto';
+	color: #8c0303;
+}
+
+a:hover{
+	color:#bf0404;
 }
 
 /*header ==================*/
 .ca-top-container {
 	margin-top:0px;
 	margin-bottom: 0px;
-	background: #8c0303;
+	background-color: #8c0303;
 	height: 40px;
 	border-color: transparent;
 
 }
 
-/*IUCN logo*/
-.ca-top-container .logo {
-	height: 40px;
+/*IUCN logo ================*/
+.logo {
+	height: 35px;
 	padding-right: 10px;
 
 	/*add a white bar*/
 	border-right: #ffffff solid 1px;
 	margin-right: 10px;
 
+}
+	/*banner font color*/
+.logo-text{
+	margin-top:5px;
+	margin-bottom:5px;
+	font-size: 18px;
+	color: #ffffff;
 }
 
 	/*prototype version*/
@@ -30,23 +54,19 @@ h1, h2, h3, h4, h5 {
 	font-style: italic;
 	margin-bottom: 0px;
 }
-	/*banner font color*/
-.ca-top-bar h3{
-	margin-top:5px;
-	margin-bottom:5px;
-	font-size: 18px;
-	color: #ffffff;
-}
 
 .ca-top-bar div{
 	padding-right: 10px;
 	
 }
 
+
 /*jumbotron=================*/
 .jumbotron {
 	text-align: center;
-	background-image: url('../images/zjj2.jpg');
+	background-image: url('../images/base.jpg');
+	background-size: cover;
+	background-position: center;
 }
 
 .jumbotron {
@@ -55,32 +75,91 @@ h1, h2, h3, h4, h5 {
 }
 
 .jumbotron .page-header + p{
-	/*width:65%;*/
-	/*border-top: 1px solid #ffffff;*/
-	/*border-bottom: 1px solid #ffffff;*/
-	/*color: #ffffff;*/
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
 
-	/*start button*/
-	.start-button {
-		background-color: #8c0303;
-		border-color: transparent;
-		border-radius: 50px;
-		padding:10px 50px;
+/*start button*/
+.start-button {
+	width: 160px;
+	height: 60px;
+	background-color: #8c0303;
+	border-color: transparent;
+	border-radius: 50px;
+	padding:10px 50px;
+}
+
+.start-button p {
+	font-family:'Roboto';
+	display: inline-block;
+	padding-right: 10px;
+}
+
+.start-button:hover {
+	background-color:#bf0404;
+	border-color: transparent;
+}
+
+
+
+/*comparative analysis*/
+.img-wh {
+    width:150px;
+    height:150px;
+}
+
+	/*same level as li-item*/
+.wh-site {
+	display: inline-block;
+	width: 420px;
+	height: 170px;
+	border: none;
+	margin-bottom: 30px;
+}
+
+	/*wrapper insdie wh-site*/
+.wh-div {
+	display: flex;
+	align-content: center;
+}
+
+
+.brief-description {
+	padding-bottom:30px;
+}
+
+/*the content inside*/
+
+	/*div between the image and texts*/
+	.wh-div > div {
+		padding-right:20px;
 	}
 
-	.start-button:hover {
-		background-color:#bf0404;
-		border-color: transparent;
-
+	.wh-div a {
+		display: block;
 	}
+
+	.wh-div a::before {
+		padding-right: 7px;
+		content: '\f08e';
+		font-family: FontAwesome;
+	}
+
+	.wh-div .site-name {
+		font-family: 'Muli';
+		font-weight: bold;
+		font-size: 16px;
+	}
+
+	.wh-div .crit {
+		font-style: italic;
+	}
+
 /*footer==================*/
 footer {
 	color: #ffffff;
 	background-color: #8c0303;
-	min-height: 200px;
+	min-height: 100px;
 }
 
 .ca-footer {
@@ -88,17 +167,24 @@ footer {
 }
 
 
-.col-right {
-	padding-top: 20px;
-	padding-bottom: 20px;
-	display:inline-block;
-	text-align:right;
+.hr-footer {
+	margin: 0 auto;
+	border: 0;
+	border-top: 1px solid #590202;
 }
 
 
-@media (max-width: 768px) {
+.col-right {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+
+@media (max-width: 992px) {
 	.col-right {
-    text-align:center;
+    justify-content: center;
     /*margin-right:-4px;*/
 	}
 }
@@ -106,13 +192,13 @@ footer {
 .col-left {
 	padding-top: 20px;
 	padding-bottom: 20px;
-	display:inline-block;
-    text-align:left;
+	display: flex;
+	justify-content: flex-start;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
 	.col-left {
-    text-align:center;
+    justify-content:center;
     /*margin-right:-4px;*/
 	}
 }

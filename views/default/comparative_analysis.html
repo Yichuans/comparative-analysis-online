@@ -20,17 +20,13 @@
 
 
         <!-- bootstrap style -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
+        {{include 'default/header-css.html'}}
 
         <!-- map style -->
          <style type="text/css">
-            #map { height: 380px; }
-
-
-            img {
-                width:150px;
-                height:150px;
+            #map { 
+                height: 380px; 
+                width: 100%;
             }
          </style>
 
@@ -39,43 +35,77 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+        {{include 'default/topbar.html'}}   
 
         <!-- map element -->
         <section>
             <div id="map"></div>
         </section>
 
-        <article>
+        <article class='container'>
+
             <ul class='nav nav-tabs' role='tablist'>
                 <li class='active'><a href='#realm-biome' data-toggle='tab'>Realm-biome</a></li>
                 <li><a href='#biodiv' data-toggle='tab'>Biodiversity Hotspot</a></li>
                 <li><a href='#kba' data-toggle='tab'>Key Biodiversity Areas</a></li>
-
             </ul>
+
             <div class='tab-content'>
                 <section class='tab-pane active' id='realm-biome'>
                     <!-- realmbiome -->
                     {{=H2('Realm-Biome')}}
 
+                    <div class='row'>
+                        <div class='col-sm-12 brief-description'>
+                            Some explanation text here
+                        </div>
+                    </div>
+
                     {{# check the returned dictionary, if not empty list out DIVs}}
                     {{if len(rb)==0:}}
                         {{=P('Does not overlap with any Realm-Biome')}}
-                    {{else:}}
-                        {{for bid in rb.keys():}}
-                            <a class='btn', data-toggle='collapse', href='#{{=IS_SLUG()(bid)[0]}}'>
-                            {{=H3(bid)}}
-                            </a>
 
-                            <div class='collapse' id='{{=IS_SLUG()(bid)[0]}}'>
-                            {{if len(rb[bid])==0:}}
-                                {{=P('{} does not have any World Heritage site'.format(bid))}}
-                            {{else:}}
-                                {{=UL(*[LI(div, _class='list-group-item') for div in rb[bid]], _class='list-group')}}
-                            {{pass}}
+                    {{else:}}
+                        <!-- for each realmbiome-->
+                        <div class='row' id='accordion'>
+                            <!-- index -->
+                            <div class='col-sm-3'>
+                                {{for bid in rb.keys():}}
+                                    <a data-toggle='collapse', href='#{{=IS_SLUG()(bid)[0]}}', data-parent='#accordion'>
+                                    {{=P(bid)}}
+                                </a>
+                                {{pass}}
 
                             </div>
 
-                        {{pass}}
+                            <!-- content -->
+                            <div class='col-sm-9'>
+                                <!-- by default show the full content of the first item -->
+                                {{is_first_item=True}}
+
+                                {{for bid in rb.keys():}}
+                                    {{if is_first_item:}}
+                                        <div class='collapse in' id='{{=IS_SLUG()(bid)[0]}}'>
+                                        {{is_first_item=False}}
+                                    {{else:}}
+                                        <div class='collapse' id='{{=IS_SLUG()(bid)[0]}}'>
+                                    {{pass}}
+
+                                    <h3>{{=bid}}</h3>
+                                    {{if len(rb[bid])==0:}}
+                                        {{=P('{} does not have any World Heritage site'.format(bid))}}
+                                    {{else:}}
+                                        {{=UL(*[LI(div, _class='list-group-item wh-site') for div in rb[bid]], _class='list-group')}}
+                                    {{pass}}
+
+                                </div>
+                                {{pass}}
+
+                            </div>
+
+                        </div>
+
+
                     {{pass}}
                 </section>
 
@@ -100,8 +130,7 @@
                             </div>
 
                         {{pass}}
-                    {{pass}}
-                    
+                    {{pass}}                    
                 </section>
 
                 <section class='tab-pane', id='kba'>
@@ -135,10 +164,9 @@
 
         </article>
 
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script> 
+        {{include 'default/footer.html'}}
+
+        {{include 'default/bottom-js.html'}}
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>

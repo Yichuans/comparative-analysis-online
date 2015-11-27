@@ -1,16 +1,32 @@
 <footer>
-    <!-- here is the copy right, institue log etc -->
+    <!-- here is the copyright, institue log etc -->
     <div class='container ca-footer'>
     	<div class='row'>
-    		<!-- left -->
-    		<div class='col-sm-6 col-xs-12 col-left'>
-    			<p>hello</p>
+    		<div class='col-sm-12 col-left'>
+    			<p> Explore gaps and comparisons with biodiversity World Heritage sites </p>
     		</div>
+    	</div>
+
+    	<!-- horizontal divider-->
+    	<hr class='hr-footer'>
+
+    	<!-- logo row -->
+    	<div class='row'>
+    		<!-- left -->
+    		<div class='col-md-6 col-sm-12 col-left'>
+				<h3 class='logo-text'>{{=IMG(_class='logo', _src=URL('static', 'images/iucn-white-logo.png'), \
+				_srcset=', '.join([URL('static', 'images/iucn-white-logo@2x.png') + ' 2x', \
+				URL('static', 'images/iucn-white-logo@3x.png') + ' 3x']))}}Global Comparative Analysis Online&nbsp;</h3>
+			</div>
     		<!-- right -->
-    		<div class='col-sm-6 col-xs-12 col-right'>
+    		<div class='col-md-6 col-sm-12 col-right'>
     			<div class='logo-holder'>
-    				<a href=''>{{=IMG(_src=URL('static', 'images/iucn-white.png'))}}</a>
-    				<a href=''>{{=IMG(_src=URL('static', 'images/wcmc-white.png'))}}</a>
+    				<a href='http://www.unep-wcmc.org'>{{=IMG(_src=URL('static', 'images/unep-wcmc-white-logo.png'), \
+    				_srcset=', '.join([URL('static', 'images/unep-wcmc-white-logo@2x.png') + ' 2x', \
+    				URL('static', 'images/unep-wcmc-white-logo@3x.png') + ' 3x']))}}</a>
+    				<a href='http://whc.unesco.org'>{{=IMG(_src=URL('static', 'images/unesco-white-logo.png'), \
+    				_srcset=', '.join([URL('static', 'images/unesco-white-logo@2x.png') + ' 2x', \
+    				URL('static', 'images/unesco-white-logo@3x.png') + ' 3x']))}}</a>
     			</div>    			
     		</div>
     	</div>

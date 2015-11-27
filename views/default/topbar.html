@@ -1,7 +1,9 @@
 <nav class='navbar navbar-default ca-top-container'>
 	<div class='container ca-top-bar'>
 		<div class='navbar-left'>
-			<h3>{{=IMG(_class='logo', _src=URL('static', 'images/iucn-white.png'))}}Global Comparative Analysis Online&nbsp;</h3>
+			<h3 class='logo-text'>{{=IMG(_class='logo', _src=URL('static', 'images/iucn-white-logo.png'), \
+			_srcset=', '.join([URL('static', 'images/iucn-white-logo@2x.png') + ' 2x', \
+			URL('static', 'images/iucn-white-logo@3x.png') + ' 3x']))}}Global Comparative Analysis Online&nbsp;</h3>
 		</div>
 
 		<div class='navbar-right navbar-text'>

@@ -4,14 +4,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- leaflet js library -->
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
 <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
 
-
 <!-- bootstrap style -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+{{include 'default/header-css.html'}}
 
 <!-- draw control -->
 <script src="{{=URL('static', 'js/leaflet.draw.js')}}"></script>
@@ -22,7 +21,10 @@
 
 <!-- map style -->
 <style type="text/css">
- #map { height: 580px; }
+ #map {
+ 	height: 580px;
+ 	width: 100%;
+ }
 
  /* Start by setting display:none to make this hidden.
    Then we position it in relation to the viewport window
@@ -59,41 +61,42 @@ body.loading .modal {
 
 </head>
 <body>
+{{include 'default/topbar.html'}}   
 
-<main>
-<section>
-<!-- the map section -->
+<!-- the map -->
+<div class='container-fluid'>
 	<div id="map"></div>
-</section>
+</div>
 
-<section>
-<!-- instructions on how to use the map controls -->
-<!-- TO BE ADDED HERE -->
-	
-</section>	
+<article class='container'>
+	<main>
+	<section>
+	<!-- instructions on how to use the map controls -->
+	<!-- TO BE ADDED HERE -->
+		
+	</section>	
 
-<section>
-<!-- buttons to submit to server -->
-	<button type="button" id="btn-save" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">Submit boundary</button>
-	<button type="button" id="btn-clear" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
-	  Clear map
-	</button>
-</section>
+	<section>
+	<!-- buttons to submit to server -->
+		<button type="button" id="btn-save" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">Submit boundary</button>
+		<button type="button" id="btn-clear" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+		  Clear map
+		</button>
+	</section>
 
-</main>
+	</main>
 
+</article>
 
 <div id='result'></div>
 
-
-<footer>
-	<!-- Footer -->
-</footer>
+{{include 'default/footer.html'}}
 
 <div class="modal"><!-- Place at bottom of page --></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script> 
+
+{{include 'default/bottom-js.html'}}
+
+
 <script>
     $(document).ready(function(){
         // global land cover 30 NGCC
