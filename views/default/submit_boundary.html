@@ -9,15 +9,18 @@
 <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
 <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
 
-<!-- bootstrap style -->
-{{include 'default/header-css.html'}}
-
 <!-- draw control -->
 <script src="{{=URL('static', 'js/leaflet.draw.js')}}"></script>
 <link rel="stylesheet" href = "{{=URL('static', 'js/leaflet.draw.css')}}"/>
 
 <!-- support for esri layers -->
 <script src="http://cdn.jsdelivr.net/leaflet.esri/1.0.0/esri-leaflet.js"></script>
+
+<!-- shepherd -->
+<link rel='stylesheet' href="{{=URL('static', 'css/shepherd-theme-arrows.css')}}">
+
+<!-- bootstrap style -->
+{{include 'default/header-css.html'}}
 
 <!-- map style -->
 <style type="text/css">
@@ -70,17 +73,24 @@ body.loading .modal {
 
 <article class='container'>
 	<main>
-	<section>
+	<section class='row'>
 	<!-- instructions on how to use the map controls -->
 	<!-- TO BE ADDED HERE -->
 		
 	</section>	
 
-	<section>
+	<section class='row button-row'>
 	<!-- buttons to submit to server -->
-		<button type="button" id="btn-save" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">Submit boundary</button>
-		<button type="button" id="btn-clear" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+		<button type="button" id="btn-save" data-loading-text="Loading..." class="btn btn-primary submit-button" autocomplete="off">
+			Submit boundary
+		</button>
+
+		<button type="button" id="btn-clear" data-loading-text="Loading..." class="btn btn-primary submit-button" autocomplete="off">
 		  Clear map
+		</button>
+
+		<button type="button" id="btn-how" data-loading-text="Loading..." class="btn btn-primary submit-button" autocomplete="off">
+		  How to
 		</button>
 	</section>
 
@@ -97,29 +107,116 @@ body.loading .modal {
 {{include 'default/bottom-js.html'}}
 
 
-<script>
-    $(document).ready(function(){
-        // global land cover 30 NGCC
-        // mapbox tiles basemap - not used here
-		var b_toner = new L.StamenTileLayer("toner");
-		var b_watercolor = new L.StamenTileLayer("watercolor");
+<!-- shepherd -->
+<script src="{{=URL('static', 'js/tether.min.js')}}"></script>
+<script src="{{=URL('static', 'js/shepherd.min.js')}}"></script>
 
-		var mapl = new L.Map("map", {
-		    center: new L.LatLng(30, 120),
-		    // drawControl: true,
-		    zoom: 6,
-		    // layers: [b_toner, b_watercolor]
-		    layers: [b_toner]
+<script>
+
+	var start_tour = function(){
+		var tour;
+
+		tour = new Shepherd.Tour({
+		  defaults: {
+		    classes: 'shepherd-theme-arrows shepherd-element',
+		    scrollTo: true
+		  }
 		});
 
-		mapl.addLayer(b_toner);
+		// conrols
+		tour.addStep('controls', {
+			title: 'Here are the drawing tools',
+			text: 'Click to enable drawing. Once you have finished you can double click to complete the drawing',
+			attachTo: '.leaflet-top.leaflet-left right',
+			buttons: [
+			{
+				text: 'Next',
+				action: tour.next
+			}]
+		});
 
-		// base maps
-		var baseMaps = {
-		    "Stamen toner": b_toner,
-		    "Stamen watercolor": b_watercolor
-		};
+		// submit
+		tour.addStep('Step-submit', {
+	      title: 'When you are done, submit your boundary to the system',
+		  text: 'The polygon is sent to the system and the comparative analysis will commence on our server. Once this is finished, you will be redirected to the result page. If you have submitted a very complex boundary, it may take some time for the system to respond.',
+		  attachTo: '#btn-save top',
+		  buttons: [
+			{
+		      text: 'Back',
+		      action: tour.back
+		    },{
+		      classes: 'shepherd-button-ca',
+		      text: 'Next',
+		      action: tour.next
+		    }
+		  ]
+		});
 
+		// clear
+	    tour.addStep('Step-clear', {
+	      title: 'Clear the drawn polygon',
+	      text: 'Lastly if you need to clear the boundary, this button resets the drawing canvas so you can start drawing from the beginning',
+	      attachTo: '#btn-clear top',
+	      buttons: [
+	        {
+	          text: 'Back',
+	          action: tour.back
+	        }, {
+	          text: 'Done',
+	          action: tour.next
+	        }
+	      ]
+	    });
+
+	    // start
+		tour.start();
+
+	};
+
+</script>
+
+
+<!-- map draw and data submit-->
+<script>
+    $(document).ready(function(){
+        // js snippet for reuseability
+        var b_toner = new L.StamenTileLayer("toner");
+        var b_watercolor = new L.StamenTileLayer("watercolor");
+
+        // additional base layers
+        var Thunderforest_Landscape = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+
+        var Esri_WorldStreetMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+        });
+
+
+        var Esri_NatGeoWorldMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+            maxZoom: 16
+        });
+
+        // default start map
+        var mapl = new L.Map("map", {
+            layers: [Esri_WorldStreetMap],
+            attributionControl: false
+        });
+
+        // base maps
+        var baseMaps = {
+            'Esri-worldstreet': Esri_WorldStreetMap,
+            'Esri-natgeo': Esri_NatGeoWorldMap,
+            'Thuderfront-landscape': Thunderforest_Landscape,
+            "Stamen-toner": b_toner,
+            "Stamen-watercolor": b_watercolor
+
+        };
+
+
+		//locate current location
+		mapl.locate({setView: true, maxZoom: 16});
 
 		// esri maps
 		var wh = L.esri.featureLayer({url: 'http://services5.arcgis.com/Mj0hjvkNtV7NRhA7/arcgis/rest/services/WH_2015/FeatureServer/0'}).addTo(mapl);
@@ -130,6 +227,9 @@ body.loading .modal {
 
 		// control for basemaps and other layers
 		L.control.layers(baseMaps, featureMaps).addTo(mapl);
+
+		// attribution
+		// var attrs = new L.control.attribution({'prefix':'false'});
 
 		// add empty feature group for holding drawn items
 		var drawnItems = new L.FeatureGroup();
@@ -194,9 +294,14 @@ body.loading .modal {
 			  		$body.removeClass("loading"); 
 			  		$('#result').html(data);
 
-			  		// redirection
-			  		window.location.href = "{{=URL('comparative_analysis')}}"+ '/' + data;
+			  		if (Number(data)){
+				  		// redirection
+				  		window.location.href = "{{=URL('comparative_analysis')}}"+ '/' + data;
+			  		} else {
+			  			$('#result').html('no data submitted');
+			  		};
 			  		// alert('success');
+			  		
 			  	}, error:function(){
 
 			  		$body.removeClass("loading"); 
@@ -209,21 +314,16 @@ body.loading .modal {
 		  })
 
 		  $('#btn-clear').on('click', function () {
-		  	// console.log(mapl);
-
-		  	// setTimeout(function(){}, 5000);
 		  	drawnItems.clearLayers(); //get rid of all previous draw layers.
-
-		  	// if the layers are on the map already
-		  	// mapl.eachLayer(function(layer){
-		  	// 	if (mapl.hasLayer(geojson_fg)){
-		  	// 		mapl.removeLayer(geojson_fg);
-		  	// 	}
-		  		// mapl.removeLayer(layer);
 		  	geojson_fg.clearLayers();
 
 		  	})
 
+		  $('#btn-how').on('click', function(){
+		  	start_tour();
+		  	
+		  })
+		  // once the map has intialised
 
 		})
 </script>

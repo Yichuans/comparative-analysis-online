@@ -2,3 +2,44 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script> 
+
+<script>
+// make the footer at bottom of page 
+// need to detect change in page height and adjust
+var adjust_footer = function(){
+	var docHeight = $(window).height();
+	var footerHeight = $('footer').height();
+	var footerTop = $('footer').position().top + footerHeight;
+
+	if (footerTop < docHeight) {
+	$('footer').css('margin-top', 10+ (docHeight - footerTop) + 'px');
+	}
+}
+
+// initial
+$(document).ready(function() {
+	// adjust footer
+	adjust_footer();
+
+	// adjust collapse
+	$('.collapse').on('shown.bs.collapse', function(){
+		adjust_footer();
+	});
+
+	$('.collapse').on('hidden.bs.collapse', function(){
+		adjust_footer();
+	});
+
+	// adjust tabs
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function(){
+		adjust_footer();
+	});
+
+	$('a[data-toggle="tab"]').on('hidden.bs.tab', function(){
+		adjust_footer();
+	});
+
+
+	});
+
+</script>

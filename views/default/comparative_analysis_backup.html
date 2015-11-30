@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Comparative analysis</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
+        <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+        <!-- support for esri layers -->
+        <script src="http://cdn.jsdelivr.net/leaflet.esri/1.0.0/esri-leaflet.js"></script>
+
+
+        <!-- bootstrap style -->
+        {{include 'default/header-css.html'}}
+
+        <!-- map style -->
+         <style type="text/css">
+            #map { 
+                height: 380px; 
+                width: 100%;
+            }
+         </style>
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        {{include 'default/topbar.html'}}   
+
+        <!-- map element -->
+        <section>
+            <div id="map"></div>
+        </section>
+
+        <article class='container'>
+
+            <ul class='nav nav-tabs' role='tablist'>
+                <li class='active'><a href='#realm-biome' data-toggle='tab'>Realm-biome</a></li>
+                <li><a href='#biodiv' data-toggle='tab'>Biodiversity Hotspot</a></li>
+                <li><a href='#kba' data-toggle='tab'>Key Biodiversity Areas</a></li>
+            </ul>
+
+            <div class='tab-content'>
+
+
+
+            
+                <section class='tab-pane active' id='realm-biome'>
+                    <!-- realmbiome -->
+                    {{=H2('Realm-Biome')}}
+
+                    <div class='row'>
+                        <div class='col-sm-12 brief-description'>
+                            Some explanation text here
+                        </div>
+                    </div>
+
+                    {{# check the returned dictionary, if not empty list out DIVs}}
+                    {{if len(rb)==0:}}
+                        {{=P('Does not overlap with any Realm-Biome')}}
+
+                    {{else:}}
+                        <!-- for each realmbiome-->
+                        <div class='row' id='accordion'>
+                            <!-- index -->
+                            <div class='col-sm-3'>
+                                {{for bid in rb.keys():}}
+                                    <a data-toggle='collapse', href='#{{=IS_SLUG()(bid)[0]}}', data-parent='#accordion'>
+                                    {{=P(bid)}}
+                                </a>
+                                {{pass}}
+
+                            </div>
+
+                            <!-- content -->
+                            <div class='col-sm-9'>
+                                <!-- by default show the full content of the first item -->
+                                {{is_first_item=True}}
+
+                                {{for bid in rb.keys():}}
+                                    {{if is_first_item:}}
+                                        <div class='collapse in' id='{{=IS_SLUG()(bid)[0]}}'>
+                                        {{is_first_item=False}}
+                                    {{else:}}
+                                        <div class='collapse' id='{{=IS_SLUG()(bid)[0]}}'>
+                                    {{pass}}
+
+                                    <h3>{{=bid}}</h3>
+                                    {{if len(rb[bid])==0:}}
+                                        {{=P('{} does not have any World Heritage site'.format(bid))}}
+                                    {{else:}}
+                                        {{=UL(*[LI(div, _class='list-group-item wh-site') for div in rb[bid]], _class='list-group')}}
+                                    {{pass}}
+
+                                </div>
+                                {{pass}}
+
+                            </div>
+
+                        </div>
+
+
+                    {{pass}}
+                </section>
+
+                <section class='tab-pane' id='biodiv'>
+                    <!-- hotspot -->
+                    {{=H2('Biodiversity Hotspot')}}
+
+                    {{if len(hs)==0:}}
+                        {{=P('Does not overlap with any Biodiversity Hotspot')}}
+                    {{else:}}
+                        {{for bid in hs.keys():}}
+                            <h3>
+                                <a class='btn', data-toggle='collapse', href='#{{=IS_SLUG()(bid)[0]}}'>{{=bid}}</a>
+                            </h3>
+
+                            <div class='collapse' id='{{=IS_SLUG()(bid)[0]}}'>
+                            {{if len(hs[bid])==0:}}
+                                {{=P('{} does not have any World Heritage site'.format(bid))}}
+                            {{else:}}
+                                {{=UL(*[LI(div) for div in hs[bid]])}}
+                            {{pass}}
+                            </div>
+
+                        {{pass}}
+                    {{pass}}                    
+                </section>
+
+                <section class='tab-pane', id='kba'>
+                    <!-- kba -->
+                    {{=H2('Key Biodiversity Areas (non-avian)')}}
+
+                    {{if len(kba)==0:}}
+                        {{=P('Does not overlap with any KBA')}}
+                    {{else:}}
+                        {{for bid in kba.keys():}}
+                            <h3>
+                                <a class='btn', data-toggle='collapse', href='#{{=IS_SLUG()(bid)[0]}}'>{{=bid}}</a>
+                            </h3>
+
+                            <div class='collapse' id='{{=IS_SLUG()(bid)[0]}}'>
+
+                            {{if len(kba[bid])==0:}}
+                                {{=P('{} does not have any World Heritage site'.format(bid))}}
+                            {{else:}}
+                                {{=UL(*[LI(div) for div in kba[bid]])}}
+                            {{pass}}
+                            </div>
+
+                        {{pass}}
+                    {{pass}}
+                </section>
+            </div>
+
+
+
+
+        </article>
+
+        {{include 'default/footer.html'}}
+
+        {{include 'default/bottom-js.html'}}
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+        //     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+        //     function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        //     e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        //     e.src='//www.google-analytics.com/analytics.js';
+        //     r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+        //     ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+                // global land cover 30 NGCC
+                // mapbox tiles basemap - not used here
+                var b_toner = new L.StamenTileLayer("toner");
+                var b_watercolor = new L.StamenTileLayer("watercolor");
+
+                var mapl = new L.Map("map", {
+                    layers: [b_toner]
+                });
+
+                mapl.addLayer(b_toner);
+
+                // base maps
+                var baseMaps = {
+                    "Stamen toner": b_toner,
+                    "Stamen watercolor": b_watercolor
+                };
+
+                        
+                // control for basemaps and other layers
+                L.control.layers(baseMaps).addTo(mapl);
+
+                // add a local geojson layer: access control allow-origin 
+                $.get('{{=URL('geoapi', 'tempgeom', request.args[0])}}', function(data){
+                    var tempgeom = new L.geoJson(data);
+                    console.log(data);
+
+                    mapl.addLayer(tempgeom);
+                    maxbounds = tempgeom.getBounds()
+                    mapl.fitBounds(maxbounds)
+                    mapl.setMaxBounds(maxbounds)
+                })
+
+                })
+
+
+        </script>
+
+
+    </body>
+</html>

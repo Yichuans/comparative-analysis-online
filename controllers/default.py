@@ -171,7 +171,7 @@ def comparative_analysis():
     for bid in bids:
         hs[bid] = [ca.div_wh_row(row) for row in ca.get_wh_rows_by_bid(bid, ca.HS)]
 
-    return dict(rb=rb, kba=kba, hs=hs)
+    return dict(rb=rb, hs=hs, kba=kba)
 
 # maybe a further functionality to be exposed
 def comparing_wh():

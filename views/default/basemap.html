@@ -1,0 +1,37 @@
+// js snippet for reuseability
+var b_toner = new L.StamenTileLayer("toner");
+var b_watercolor = new L.StamenTileLayer("watercolor");
+
+// additional base layers
+var Thunderforest_Landscape = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+});
+
+var Esri_WorldStreetMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+});
+
+
+var Esri_NatGeoWorldMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+    maxZoom: 16
+});
+
+// default start map
+var mapl = new L.Map("map", {
+    layers: [Esri_WorldStreetMap]
+});
+
+// base maps
+var baseMaps = {
+    'Esri-worldstreet': Esri_WorldStreetMap,
+    'Esri-natgeo': Esri_NatGeoWorldMap,
+    'Thuderfront-landscape': Thunderforest_Landscape,
+    "Stamen-toner": b_toner,
+    "Stamen-watercolor": b_watercolor
+
+};
+
+        
+// control for basemaps and other layers
+L.control.layers(baseMaps).addTo(mapl);

@@ -45,14 +45,14 @@
         </section>
 
         <article class='container'>
-            <!-- tab index -->
+            <!-- index -->
             <ul class='nav nav-tabs' role='tablist'>
                 <li class='active'><a href='#realm-biome' data-toggle='tab'>Realm-Biome</a></li>
                 <li><a href='#biodiv' data-toggle='tab'>Biodiversity Hotspot</a></li>
                 <li><a href='#kba' data-toggle='tab'>Key Biodiversity Areas</a></li>
             </ul>
 
-            <!-- tab content -->
+            <!-- content -->
             <div class='tab-content'>
 
             {{is_first_panel=True}}
@@ -83,7 +83,7 @@
                 <section class='tab-pane' id='{{=unit_id}}'>
                 {{pass}}
 
-                    <!-- for each unit with in tab-->
+                    <!-- unit -->
                     {{=H2(unit_heading)}}
 
                     <div class='row'>
@@ -92,45 +92,46 @@
                         </div>
                     </div>
 
-                    <!-- main content -->
                     {{# check the returned dictionary, if not empty list out DIVs}}
 
                     {{if len(unit)==0:}}
                         {{=P('Does not overlap with any {}'.format(unit_heading))}}
                     {{else:}}
-
+                        <!-- for each realmbiome-->
                         <div class='row'>
-                            <div class='col-sm-12'>
-                            <!-- for each realmbiome accordion style-->
-                                <div class='panel-group' id='{{=unit_id+ "-accordion"}}'>
+
+                            <!-- index -->
+                            <div class='col-sm-3'>
+                                {{for bid in unit.keys():}}
+                                    <a data-toggle='collapse', href='#{{=IS_SLUG()(bid)[0]}}'>
+                                    {{=P(bid)}}
+                                </a>
+                                {{pass}}
+
+                            </div>
+
+                            <!-- content -->
+                            <div class='col-sm-9'>
+                                <!-- by default show the full content of the first item -->
+                                {{is_first_item=True}}
 
                                 {{for bid in unit.keys():}}
-                                    <div class="panel panel-default">
-                                        <!-- index -->
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent='#{{=unit_id+ "-accordion"}}' href="#{{=IS_SLUG()(bid)[0]}}" class='bid-header-container'>
-                                                    {{=P(bid)}}
-                                                    {{=SPAN(len(unit[bid]), _class='badge wh-badge')}}
-                                                </a>
-                                            </h4>
-                                        </div>
+                                    {{if is_first_item:}}
+                                        <div class='collapse in' id='{{=IS_SLUG()(bid)[0]}}'>
+                                        {{is_first_item=False}}
+                                    {{else:}}
+                                        <div class='collapse' id='{{=IS_SLUG()(bid)[0]}}'>
+                                    {{pass}}
 
-                                        <!-- content -->
-                                        <div id="{{=IS_SLUG()(bid)[0]}}" class="panel-collapse collapse">
-                                            <div class="panel-body">
-                                                {{if len(unit[bid])==0:}}
-                                                    {{=P('{} does not have any World Heritage site'.format(bid))}}
-                                                {{else:}}
-                                                    {{=UL(*[LI(div, _class='list-group-item wh-site') for div in unit[bid]], _class='list-group wh-group')}}
-                                                {{pass}}
-                                            </div>
-                                        </div>
+                                    <h3>{{=bid}}</h3>
+                                    {{if len(unit[bid])==0:}}
+                                        {{=P('{} does not have any World Heritage site'.format(bid))}}
+                                    {{else:}}
+                                        {{=UL(*[LI(div, _class='list-group-item wh-site') for div in unit[bid]], _class='list-group')}}
+                                    {{pass}}
+
                                     </div>
                                 {{pass}}
-                                <!-- for each end -->
-                                </div>
-
 
                             </div>
 
@@ -152,10 +153,10 @@
 
         {{include 'default/bottom-js.html'}}
 
+
         <!-- dotdotdot after jquery-->
         <script type="text/javascript" src='{{=URL('static', 'js/jquery.dotdotdot.min.js')}}'></script>
         <script type="text/javascript">
-
             $(document).ready(function(){
                 $('.wh-name-holder').dotdotdot({
                     ellipsis: '...',
@@ -180,43 +181,26 @@
         <script type="text/javascript">
 
             $(document).ready(function(){
-                // js snippet for reuseability
+                // global land cover 30 NGCC
+                // mapbox tiles basemap - not used here
                 var b_toner = new L.StamenTileLayer("toner");
                 var b_watercolor = new L.StamenTileLayer("watercolor");
 
-                // additional base layers
-                var Thunderforest_Landscape = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                });
-
-                var Esri_WorldStreetMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
-                });
-
-
-                var Esri_NatGeoWorldMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
-                    maxZoom: 16
-                });
-
-                // default start map
                 var mapl = new L.Map("map", {
-                    layers: [Esri_WorldStreetMap]
+                    layers: [b_toner]
                 });
+
+                mapl.addLayer(b_toner);
 
                 // base maps
                 var baseMaps = {
-                    'Esri-worldstreet': Esri_WorldStreetMap,
-                    'Esri-natgeo': Esri_NatGeoWorldMap,
-                    'Thuderfront-landscape': Thunderforest_Landscape,
-                    "Stamen-toner": b_toner,
-                    "Stamen-watercolor": b_watercolor
-
+                    "Stamen toner": b_toner,
+                    "Stamen watercolor": b_watercolor
                 };
+
                         
                 // control for basemaps and other layers
                 L.control.layers(baseMaps).addTo(mapl);
-
 
                 // add a local geojson layer: access control allow-origin 
                 $.get('{{=URL('geoapi', 'tempgeom', request.args[0])}}', function(data){
@@ -224,10 +208,9 @@
                     console.log(data);
 
                     mapl.addLayer(tempgeom);
-                    maxbounds = tempgeom.getBounds();
-                    mapl.fitBounds(maxbounds);
-                    mapl.setMaxBounds(maxbounds);
-                    mapl.zoomOut();
+                    maxbounds = tempgeom.getBounds()
+                    mapl.fitBounds(maxbounds)
+                    mapl.setMaxBounds(maxbounds)
                 })
 
                 })

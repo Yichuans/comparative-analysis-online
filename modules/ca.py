@@ -267,11 +267,11 @@ def div_wh_row(whrow):
     whname = P(whrow.en_name, _class='site-name')
     whcountry = P(whrow.country, _class='country')
     whcrit = P(whrow.criteria, _class='crit')
-    unescolink = A('UNESCO WHC site page', _href='http://whc.unesco.org/en/list/'+ str(whrow.unesid))
-    wdpalink = A('ProtectedPlanet page', _href='http://www.protectedplanet.net/'+str(whrow.wdpaid))
+    unescolink = A('UNESCO WHC site page', _target="_blank", _href='http://whc.unesco.org/en/list/'+ str(whrow.unesid))
+    wdpalink = A('ProtectedPlanet page', _target="_blank", _href='http://www.protectedplanet.net/'+str(whrow.wdpaid))
     img = IMG(_src=get_photo_url(whrow.unesid), _class='img-circle img-wh')
 
-    div = DIV(DIV(img), DIV(whname, whcountry, whcrit, unescolink, wdpalink), _class='wh-div')
+    div = DIV(DIV(img), DIV(DIV(whname, _class='wh-name-holder'), whcountry, whcrit, unescolink, wdpalink), _class='wh-div')
     return div
 
 
