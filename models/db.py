@@ -19,7 +19,7 @@ from gluon import current
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
     # db = DAL('sqlite://storage.sqlite')
-    db = DAL('postgres://postgres:gisintern@localhost/postgis')
+    db = DAL('postgres://postgres:gisintern@localhost/postgis', migrate=False)
     current.db = db
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
