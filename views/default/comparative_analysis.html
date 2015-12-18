@@ -63,15 +63,17 @@
                 {{if counter == 1:}}
                     {{unit_id = 'realm-biome'}}
                     {{unit_heading = 'Realm-Biome'}}
+                    {{unit_exp = P('A large spatial region, within which ecosystems share a broadly similar biota. More information can be found ', A('at the Biodiversity a-z website', _target='blank', _href='http://www.biodiversitya-z.org/content/biogeographic-realm'))}}
                     
                 {{elif counter == 2:}}
                     {{unit_id = 'biodiv'}}
                     {{unit_heading = 'Biodiversity Hotspot'}}
+                    {{unit_exp = P('Large regions containing exceptional concentrations of plant endemism and experiencing high rates of habitat loss. More information can be found ',A('at the Biodiversity a-z website', _target='blank', _href = 'http://www.biodiversitya-z.org/content/biodiversity-hotspots'))}}
 
                 {{else:}}
                     {{unit_id = 'kba'}}
                     {{unit_heading = 'Key Biodiversity Areas (non-avian)'}}
-
+                    {{unit_exp = P('Sites contributing significantly to the global persistence of biodiversity. They represent the most important sites for biodiversity conservation worldwide, and are identified nationally using globally standardised criteria and thresholds. More information can be found ', A('at the Biodiversity a-z website', _target='blank', _href ='http://www.biodiversitya-z.org/content/key-biodiversity-areas-kba'))}}
                 {{pass}}
 
                 {{counter += 1}}
@@ -88,7 +90,7 @@
 
                     <div class='row'>
                         <div class='col-sm-12 brief-description'>
-                            Some explanation text here
+                            {{=unit_exp}}
                         </div>
                     </div>
 
